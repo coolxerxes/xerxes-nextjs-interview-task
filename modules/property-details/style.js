@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 export const AccountList = styled.ul`
   list-style: none;
   padding-left: 0;
+  width: 100%;
 `;
 
 export const AccountLabel = styled.div`
@@ -26,6 +27,13 @@ export const InfoText = styled.div`
   color: ${(props) => props.theme.colors.neutral[600]};
 `;
 
+export const InfoBadge = styled.div`
+  border-radius: 10px;
+  font-size: ${(props) => props.theme.typography.s.fontSize};
+  background-color: ${(props) => props.status === 'good' ? '#c2f7e1' : '#006b57'};
+  padding: 2px 15px;
+`
+
 export const AccountSection = styled.div`
   padding: ${(props) => props.theme.space.m} 0;
 
@@ -37,7 +45,8 @@ export const AccountSection = styled.div`
 
 export const AccountListItem = styled.div`
   display: flex;
-
+  width: 100%;
+  justify-content: space-between;
   &:not(:last-of-type) {
     margin-bottom: ${(props) => props.theme.space.m};
   }

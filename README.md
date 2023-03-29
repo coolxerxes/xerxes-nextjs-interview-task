@@ -27,12 +27,17 @@ Consider what other data this component could take and how that might affect you
 
 Consider opportunities to reduce repetition in the code and increase legibility
 - This could be creating new components, simplifying existing ones, extracting helper function to simplify code or styling
+Yes: I added BadgeInfo.
 - Show us what you can do and implement a few of these if you have time
+Ans: If I have time I should do add mobile friendly widget, for example add menu icon on the top left of the screen, thanks.
 
 We also ask that you update the readme with answers to the following questions 
 
 1. Given more time, what other changes you would have liked to make?
+Ans: If I have more time, I will add menu to the left sidebar, and make more api data, and data list to select, so if I select on data, I can select several data one by one.
 2. What UX or design improvements or alterations might you suggest? These can be to existing components or completely new ideas.
+Ans: Badge Type is not clear. The current status is good. There might be several status 'good', 'excellent', 'not bad', 'bad', 'getting worse' ...'
+How can I express the words with 2 colors.
 
 ----
 

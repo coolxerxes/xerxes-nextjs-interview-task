@@ -1,12 +1,11 @@
 /* eslint-disable max-statements */
-import { add, format } from "date-fns";
-import React from "react";
+import { add, format, getYear } from "date-fns";
+import React, { useEffect } from "react";
 import { Button } from "../../components/button";
 import RowContainer from "../../components/row-container";
 import {
-  AccountHeadline, AccountLabel, AccountList, AccountListItem, AccountSection, InfoText, Inset
+  AccountHeadline, AccountLabel, AccountList, AccountListItem, AccountSection, InfoBadge, InfoText, Inset
 } from "./style";
-
 
 const account = {
   uid: "65156cdc-5cfd-4b34-b626-49c83569f35e",
@@ -33,12 +32,44 @@ const account = {
   updateAfterDays: 30,
 };
 
-const Detail = ({}) => {
+const Detail = ({ }) => {
+  const [account, setAccount] = React.useState(undefined)
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      const response = await fetch('/api/account');
+      const data = await response.json();
+      setAccount(data.account);
+    } catch {
+
+    }
+  }
+
+  if (account === undefined) {
+    return 'Loading...'
+  }
+
   let mortgage;
   const lastUpdate = new Date(account.lastUpdate);
+  const purchasedDate = new Date(account.originalPurchasePriceDate);
   if (account.associatedMortgages.length) {
     mortgage = account.associatedMortgages[0];
   }
+
+  const { originalPurchasePrice, originalPurchasePriceDate, recentValuation } = account;
+
+  //   sincePurchase = `recentValuation - originalPurchasePrice`
+  //  sincePurchasePercentage = `sincePurchase / originalPurchasePrice * 100`
+  //  annualAppreciation =`sincePurchasePercentage / number of years since purchase`
+  //  colours used for the positive change in the image are #c2f7e1 and #006b57
+
+  const sincePurchase = recentValuation.amount - originalPurchasePrice;
+  const sincePurchasePercentage = sincePurchase / originalPurchasePrice * 100;
+  const annualAppreciation = sincePurchasePercentage / (getYear(new Date()) - getYear(new Date(originalPurchasePriceDate)));
 
   return (
     <Inset>
@@ -69,6 +100,46 @@ const Detail = ({}) => {
             <AccountListItem><InfoText>{account.name}</InfoText></AccountListItem>
             <AccountListItem><InfoText>{account.bankName}</InfoText></AccountListItem>
             <AccountListItem><InfoText>{account.postcode}</InfoText></AccountListItem>
+          </AccountList>
+        </RowContainer>
+      </AccountSection>
+      <AccountSection>
+        <AccountLabel>Valuation changes</AccountLabel>
+        <RowContainer>
+          <AccountList>
+            <AccountListItem>
+              <InfoText>
+                Purchased for {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(
+                  originalPurchasePrice
+                )} in {format(purchasedDate, "MMM yyyy")}
+              </InfoText>
+            </AccountListItem>
+            <AccountListItem>
+              <InfoText>
+                Since purchase
+              </InfoText>
+              <InfoBadge status={recentValuation.status}>
+                {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(
+                  sincePurchase
+                )}
+                ({sincePurchasePercentage}%)
+              </InfoBadge>
+            </AccountListItem>
+            <AccountListItem>
+              <InfoText>
+                Annual appreciation
+              </InfoText>
+              <InfoBadge status={recentValuation.status}>
+                {annualAppreciation}%
+              </InfoBadge>
+            </AccountListItem>
+
           </AccountList>
         </RowContainer>
       </AccountSection>
